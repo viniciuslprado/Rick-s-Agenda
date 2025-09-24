@@ -1,0 +1,188 @@
+/*ESTILOS DA VISUALIZAÇÃO DE CALENDÁRIO*/
+
+/* --------------------
+   Contêiner e Cabeçalho
+   -------------------- */
+.calendar-grid-container {
+    max-width: 80%; /* Define a largura máxima do contêiner */
+    margin: 2rem auto; /* Centraliza o contêiner horizontalmente */
+    border: 1px solid #ccc; /* Adiciona uma borda */
+    border-radius: 8px; /* Arredonda os cantos */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra suave */
+    background-color: #fff; /* Define o fundo como branco */
+}
+
+.calendar-header {
+    display: flex; /* Alinha os itens em uma linha usando Flexbox */
+    justify-content: space-between; /* Distribui o espaço entre os itens */
+    align-items: center; /* Alinha os itens verticalmente no centro */
+    padding: 1rem; /* Adiciona espaçamento interno */
+    border-bottom: 1px solid #eee; /* Adiciona uma linha na parte de baixo */
+}
+
+.calendar-header h2 {
+    flex-grow: 1; /* Permite que o título ocupe o espaço restante */
+    text-align: center; /* Centraliza o texto do título */
+    margin: 0; /* Remove a margem padrão do h2 */
+}
+
+.nav-button {
+    background: none; /* Remove o fundo do botão */
+    border: none; /* Remove a borda do botão */
+    font-size: 1.5rem; /* Define o tamanho da fonte */
+    cursor: pointer; /* Muda o cursor para "mãozinha" */
+    color: #007bff; /* Define a cor do texto */
+    padding: 0 10px; /* Adiciona espaçamento nas laterais */
+}
+
+.nav-button:hover {
+    color: #0056b3; /* Muda a cor ao passar o mouse */
+}
+
+/* --------------------
+   Grade e Células
+   -------------------- */
+.calendar-grid {
+    display: grid; /* Usa um layout de grade */
+    grid-template-columns: repeat(7, 1fr); /* Cria 7 colunas de tamanhos iguais */
+    gap: 1px; /* Adiciona um espaço de 1 pixel entre as células */
+    background-color: #eee; /* Define a cor de fundo da grade */
+    border-radius: 0 0 8px 8px; /* Arredonda os cantos inferiores */
+    overflow: hidden; /* Esconde o que vazar da borda */
+}
+
+.day-name {
+    background-color: #f8f8f8; /* Define a cor de fundo dos nomes dos dias */
+    padding: 10px; /* Adiciona espaçamento interno */
+    text-align: center; /* Centraliza o texto */
+    font-weight: bold; /* Deixa a fonte em negrito */
+    border-bottom: 1px solid #eee; /* Adiciona uma linha na parte de baixo */
+    color: #555; /* Define a cor do texto */
+}
+
+.calendar-day-cell {
+    background-color: #fff; /* Define o fundo das células como branco */
+    padding: 10px; /* Adiciona espaçamento interno */
+    height: 120px; /* Define uma altura fixa para a célula */
+    position: relative; /* Prepara a célula para posicionar o conteúdo */
+    display: flex; /* Alinha o conteúdo em coluna */
+    flex-direction: column; /* Alinha o conteúdo em coluna */
+    cursor: pointer; /* Muda o cursor para "mãozinha" */
+}
+
+.day-number {
+    font-weight: bold; /* Deixa a fonte em negrito */
+    font-size: 1.2em; /* Define o tamanho da fonte */
+    color: #333; /* Define a cor do texto */
+    text-align: right; /* Alinha o número à direita */
+    padding-bottom: 5px; /* Adiciona um pequeno espaço na parte de baixo */
+}
+
+.day-items {
+    flex-grow: 1; /* Permite que o contêiner cresça para ocupar o espaço */
+    overflow-y: auto; /* Adiciona uma barra de rolagem vertical */
+}
+
+/* --------------------
+   Itens e Modal
+   -------------------- */
+.calendar-item {
+    display: flex; /* Alinha a imagem e o texto em uma linha */
+    align-items: center; /* Alinha os itens verticalmente */
+    gap: 5px; /* Adiciona um espaçamento entre os itens */
+    font-size: 0.8rem; /* Define o tamanho da fonte */
+    padding: 4px; /* Adiciona espaçamento interno */
+    border-radius: 4px; /* Arredonda os cantos */
+    margin-top: 5px; /* Adiciona uma margem no topo */
+    background-color: #e6f7ff; /* Define a cor de fundo */
+    border: 1px solid #b3e0ff; /* Adiciona uma borda */
+    color: #0056b3; /* Define a cor do texto */
+}
+
+.calendar-item img {
+    width: 20px; /* Define a largura da imagem */
+    height: 20px; /* Define a altura da imagem */
+    border-radius: 50%; /* Torna a imagem redonda */
+}
+
+.day-view-overlay {
+    position: fixed; /* Posiciona o modal sobre todo o conteúdo */
+    top: 0; /* Alinha o modal ao topo */
+    left: 0; /* Alinha o modal à esquerda */
+    width: 100%; /* Ocupa a largura total da tela */
+    height: 100%; /* Ocupa a altura total da tela */
+    background-color: rgba(0, 0, 0, 0.7); /* Adiciona um fundo escuro e transparente */
+    display: flex; /* Usa Flexbox para o layout */
+    justify-content: center; /* Centraliza o conteúdo horizontalmente */
+    align-items: center; /* Centraliza o conteúdo verticalmente */
+    z-index: 1000; /* Garante que o modal fique na frente de outros elementos */
+}
+
+.day-view-container {
+    background-color: #333; /* Define a cor de fundo */
+    color: #fff; /* Define a cor do texto */
+    border-radius: 12px; /* Arredonda os cantos */
+    width: 90%; /* Define a largura do modal */
+    max-width: 400px; /* Define a largura máxima do modal */
+    overflow: hidden; /* Esconde o que vazar da borda */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); /* Adiciona uma sombra forte */
+}
+
+.day-view-header {
+    padding: 20px; /* Adiciona espaçamento interno */
+    border-bottom: 1px solid #444; /* Adiciona uma linha na parte de baixo */
+    display: flex; /* Usa Flexbox para o layout */
+    justify-content: space-between; /* Distribui o espaço entre os itens */
+    align-items: center; /* Alinha os itens verticalmente */
+}
+
+.day-view-header h2 {
+    font-size: 3rem; /* Define o tamanho da fonte */
+    margin: 0; /* Remove a margem padrão do h2 */
+    color: #83fc89; /* Define a cor do texto */
+}
+
+.day-view-header span {
+    font-size: 1rem; /* Define o tamanho da fonte */
+    text-transform: capitalize; /* Deixa a primeira letra de cada palavra em maiúsculas */
+    color: #aaa; /* Define a cor do texto */
+}
+
+.close-button {
+    background: none; /* Remove o fundo do botão */
+    border: none; /* Remove a borda do botão */
+    color: #fff; /* Define a cor do texto */
+    font-size: 2rem; /* Define o tamanho da fonte */
+    cursor: pointer; /* Muda o cursor para "mãozinha" */
+}
+
+.day-view-body {
+    padding: 20px; /* Adiciona espaçamento interno */
+}
+
+.day-item-card {
+    display: flex; /* Usa Flexbox para o layout */
+    align-items: center; /* Alinha os itens verticalmente */
+    gap: 15px; /* Adiciona um espaçamento entre os itens */
+    padding: 10px; /* Adiciona espaçamento interno */
+    border-radius: 8px; /* Arredonda os cantos */
+    background-color: #444; /* Define a cor de fundo */
+    margin-bottom: 10px; /* Adiciona uma margem na parte de baixo */
+}
+
+.day-item-card img {
+    width: 40px; /* Define a largura da imagem */
+    height: 40px; /* Define a altura da imagem */
+    border-radius: 50%; /* Torna a imagem redonda */
+}
+
+.day-item-details h3 {
+    margin: 0; /* Remove a margem padrão do h3 */
+    font-size: 1.2rem; /* Define o tamanho da fonte */
+}
+
+.day-item-details p {
+    margin: 0; /* Remove a margem padrão do p */
+    font-size: 0.9rem; /* Define o tamanho da fonte */
+    color: #bbb; /* Define a cor do texto */
+}

@@ -1,0 +1,45 @@
+/* ====================================
+   ESTILOS GLOBAIS
+   ==================================== */
+#root {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #007bff;
+}
+
+/* ====================================
+   ESTILOS DOS ELEMENTOS DE NAVEGAÇÃO
+   ==================================== */
+.view-switcher {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.view-button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.view-button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
