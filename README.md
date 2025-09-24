@@ -1,69 +1,52 @@
-# React + TypeScript + Vite
+# Registro de Experimentos - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é uma aplicação web desenvolvida com **React**, **TypeScript** e **Vite** para facilitar o gerenciamento de experimentos científicos, utilizando personagens fictícios da API do Rick and Morty como exemplo. O objetivo é oferecer uma interface intuitiva para pesquisadores e equipes de laboratório organizarem protocolos, agendamentos e registros de experimentos de forma visual e prática.
 
-Currently, two official plugins are available:
+## Utilidade do Projeto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A aplicação foi criada para ajudar equipes de pesquisa a:
 
-## Expanding the ESLint configuration
+- **Registrar experimentos**: Permite cadastrar protocolos experimentais e associá-los a personagens (representando amostras ou pacientes fictícios).
+- **Visualizar dados**: Oferece diferentes formas de visualização dos experimentos, como lista, calendário e agendamento, facilitando o acompanhamento das atividades do laboratório.
+- **Agendar protocolos**: Possibilita marcar datas e horários para execução de protocolos, evitando conflitos e melhorando a organização do fluxo de trabalho.
+- **Buscar e filtrar personagens**: Ajuda a encontrar rapidamente amostras ou pacientes fictícios para associar aos experimentos.
+- **Simular cenários reais**: Utilizando dados da Rick and Morty API, o sistema serve como um ambiente de demonstração para equipes que desejam testar funcionalidades antes de aplicar em dados reais.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Este projeto pode ser adaptado para diferentes áreas da saúde, biologia, veterinária ou qualquer contexto que envolva registro e agendamento de experimentos.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tecnologias Utilizadas
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- [React](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [ESLint](https://eslint.org/)
+- CSS Modules
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Funcionalidades
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Visualização dos experimentos em formato de **lista**, **calendário** ou **agendamento**
+- Busca por personagens
+- Agendamento de protocolos para personagens
+- Visualização dos protocolos agendados por data
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Como rodar o projeto
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+1. Instale as dependências:
+   ```npm install ```
+
+2. Inicie o servidor de desenvolvimento:
+   ```npm run dev```
+
+3. Acesse [http://localhost:5173](http://localhost:5173) no navegador.
+
+## Scripts disponíveis
+
+- `npm run dev` — inicia o servidor de desenvolvimento
+- `npm run build` — gera a versão de produção
+- `npm run preview` — executa o preview da build
+- `npm run lint` — executa o ESLint
+
+## Observações
+
+- Os dados são obtidos da [Rick and Morty API](https://rickandmortyapi.com/).
+- O projeto é apenas frontend e não possui integração com backend próprio.
