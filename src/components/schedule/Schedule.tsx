@@ -1,131 +1,206 @@
-import React, { useState } from 'react'; // Importa a biblioteca React e o hook de estado
-import type { AgendaItem } from '../../index'; // Importa a interface AgendaItem para tipagem
-import './Schedule.css'; // Importa os estilos CSS específicos para este componente
+import React, { useState } from 'react';
+import type { AgendaItem } from '../../hooks/useAgenda';
 
-// Define as propriedades (props) que o componente Schedule irá receber do componente pai (HomePage)
 interface ScheduleProps {
-  itens: AgendaItem[]; // Recebe a lista de todos os itens da agenda para a busca
-  handleAddItem: (newItem: AgendaItem) => void; // Recebe a função para adicionar um novo item (para personagens novos)
-  // Adiciona a prop para atualizar itens existentes
-  handleUpdateDates: (characterId: number, newDate: string) => void;
+    itens: AgendaItem[];
+    handleAddItem: (newItem: AgendaItem) => void;
+    handleUpdateDates: (characterId: number, newDate: string) => void;
 }
 
 // O componente funcional Schedule
 const Schedule: React.FC<ScheduleProps> = ({ itens, handleAddItem, handleUpdateDates }) => {
-  // Estado que armazena o texto digitado na barra de busca
-  const [searchQuery, setSearchQuery] = useState('');
-  // Estado para armazenar o personagem que foi selecionado na busca
-  const [selectedCharacter, setSelectedCharacter] = useState<AgendaItem | null>(null);
-  // Estado para armazenar a data de agendamento selecionada no formulário
-  const [scheduleDate, setScheduleDate] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCharacter, setSelectedCharacter] = useState<AgendaItem | null>(null);
+    const [scheduleDate, setScheduleDate] = useState('');
 
-  // Filtra os personagens da lista com base no texto de busca
-  const filteredCharacters = itens.filter(item =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    const filteredCharacters = itens.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
-  // Função chamada ao clicar em um personagem da lista de busca
-  const handleSelectCharacter = (character: AgendaItem) => {
-    setSelectedCharacter(character); // Define o personagem selecionado
-    setSearchQuery(''); // Limpa a barra de busca
-  };
+    const handleSelectCharacter = (character: AgendaItem) => {
+        setSelectedCharacter(character);
+        setSearchQuery('');
+    };
 
-  // Função chamada ao enviar o formulário de agendamento
-  const handleSchedule = (e: React.FormEvent) => {
-    e.preventDefault(); // Impede o recarregamento da página
-    // Verifica se há um personagem selecionado e uma data
-    if (selectedCharacter && scheduleDate) {
-      // Verifica se o personagem já existe na lista
-      const isExisting = itens.find(item => item.id === selectedCharacter.id);
-      // Corrige a data para evitar problemas de fuso horário
-      const formattedDate = new Date(`${scheduleDate}T12:00:00`).toISOString();
-      
-      if (isExisting) {
-        // Se o personagem já existe, chama a função para adicionar uma nova data
-        handleUpdateDates(selectedCharacter.id, formattedDate);
-      } else {
-        // Se o personagem não existe, cria um novo item completo
-        const newItem: AgendaItem = {
-            ...selectedCharacter,
-            // A data é um array agora
-            scheduleDates: [formattedDate],
-            status: 'Protocolo Agendado',
-            history: [{ status: 'Protocolo Agendado', date: new Date().toISOString() }],
-        };
-        handleAddItem(newItem); // Chama a função para adicionar o novo item na lista global
-      }
+    const handleSchedule = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (selectedCharacter && scheduleDate) {
+            const isExisting = itens.find(item => item.id === selectedCharacter.id);
+            
+            // Cria a data no formato ISO, adicionando um horário fixo para evitar problemas de fuso horário local.
+            const formattedDate = new Date(`${scheduleDate}T12:00:00`).toISOString();
+            
+            if (isExisting) {
+                handleUpdateDates(selectedCharacter.id, formattedDate);
+            } else {
+                const newItem: AgendaItem = {
+                    ...selectedCharacter,
+                    scheduleDates: [formattedDate],
+                    status: 'Protocolo Agendado',
+                    history: [{ status: 'Protocolo Agendado', date: new Date().toISOString() }],
+                };
+                handleAddItem(newItem);
+            }
 
-      setSelectedCharacter(null); // Limpa o personagem selecionado
-      setScheduleDate(''); // Limpa a data selecionada
-    }
-  };
+            setSelectedCharacter(null);
+            setScheduleDate('');
+        }
+    };
 
-  return (
-    // Contêiner principal da visualização
-    <div className="tab-content">
-      <div className="schedule-form-container">
-        
-        {/* Seletor de Personagem (Busca) */}
-        <div className="character-selector">
-          <input
-            type="text"
-            placeholder="Buscar por nome do personagem..." // Texto de placeholder
-            value={searchQuery} // O valor do input é controlado pelo estado `searchQuery`
-            onChange={(e) => setSearchQuery(e.target.value)} // Atualiza o estado da busca ao digitar
-            className="search-input" // Classe CSS para estilização
-          />
-          {/* Exibe os resultados da busca apenas se houver texto e itens */}
-          {searchQuery && filteredCharacters.length > 0 && (
-            <div className="search-results">
-              {/* Mapeia e renderiza até 5 resultados da busca */}
-              {filteredCharacters.slice(0, 5).map(character => (
-                <div
-                  key={character.id} // Chave única para cada item
-                  className="search-result-item" // Classe CSS para estilização
-                  onClick={() => handleSelectCharacter(character)} // Seleciona o personagem ao clicar
-                >
-                  <img src={character.image} alt={character.name} className="search-result-image" />
-                  <div className="search-result-details">
-                    <h3>{character.name}</h3>
-                    <p>Espécie: {character.species}</p>
-                    <p>Status: {character.status}</p>
-                  </div>
+    return (
+        // Contêiner principal da visualização (tab-content)
+        <div className="flex flex-col items-center p-8 bg-white rounded-xl shadow-lg mt-8 min-h-[500px] mx-auto w-full max-w-4xl">
+            <div className="w-full max-w-xl flex flex-col items-center">
+                
+                {/* Seletor de Personagem (Busca) - character-selector */}
+                <div className="relative mb-8 w-full">
+                    <input
+                        type="text"
+                        placeholder="Buscar por nome do personagem..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        
+                        // Estilização Tailwind (search-input)
+                        className="w-full max-w-md mx-auto block 
+                                   py-3 px-5 my-5 
+                                   border border-gray-300 
+                                   rounded-full 
+                                   text-base 
+                                   shadow-md 
+                                   focus:outline-none focus:border-blue-500 
+                                   transition-colors duration-300"
+                    />
+                    
+                    {/* Container de Resultados da Busca - search-results */}
+                    {searchQuery && filteredCharacters.length > 0 && (
+                        <div 
+                            className="absolute top-full left-1/2 -translate-x-1/2 
+                                       flex flex-col 
+                                       gap-2 
+                                       w-full max-w-md 
+                                       max-h-96 
+                                       overflow-y-auto 
+                                       border border-gray-200 
+                                       rounded-lg 
+                                       bg-white 
+                                       shadow-xl 
+                                       z-10 
+                                       mt-1 
+                                       p-2 
+                                       items-center"
+                        >
+                            {/* Mapeia e renderiza até 5 resultados da busca */}
+                            {filteredCharacters.slice(0, 5).map(character => (
+                                // Card de Resultado - search-result-item
+                                <div
+                                    key={character.id}
+                                    className="bg-white 
+                                               rounded-lg 
+                                               shadow-md 
+                                               flex 
+                                               items-center 
+                                               p-3 
+                                               gap-3 
+                                               cursor-pointer 
+                                               transition-transform 
+                                               hover:-translate-y-0.5 
+                                               w-full 
+                                               max-w-md"
+                                    onClick={() => handleSelectCharacter(character)}
+                                >
+                                    <img 
+                                        src={character.image} 
+                                        alt={character.name} 
+                                        // Estilização Tailwind (search-result-image)
+                                        className="w-16 h-16 
+                                                   rounded-full 
+                                                   object-cover 
+                                                   border-3 border-blue-500 
+                                                   flex-shrink-0" 
+                                    />
+                                    <div className="flex flex-col items-start text-left flex-grow min-w-0">
+                                        {/* Nome do Personagem */}
+                                        <h3 className="text-lg font-semibold my-0.5 text-blue-700 truncate w-full">
+                                            {character.name}
+                                        </h3>
+                                        {/* Detalhes */}
+                                        <p className="text-sm my-0.5 text-gray-600">Espécie: {character.species}</p>
+                                        <p className="text-sm my-0.5 text-gray-600">Status: {character.status}</p>
+                                    </div>
+                                </div>
+                            ))}
+                            {/* Mensagem se houver mais resultados não exibidos */}
+                            {filteredCharacters.length > 5 && (
+                                <p className="text-center text-sm text-gray-500 mt-2">
+                                    Mais {filteredCharacters.length - 5} resultados não exibidos.
+                                </p>
+                            )}
+                        </div>
+                    )}
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
 
-        {/* Formulário de Agendamento, exibido apenas se um personagem for selecionado */}
-        {selectedCharacter && (
-          <form className="schedule-form" onSubmit={handleSchedule}>
-            {/* Card de exibição do personagem selecionado */}
-            <div className="selected-character-card">
-                <img src={selectedCharacter.image} alt={selectedCharacter.name} />
-                <h3>{selectedCharacter.name}</h3>
-                <p>Espécie: {selectedCharacter.species}</p>
+                {/* Formulário de Agendamento, exibido apenas se um personagem for selecionado */}
+                {selectedCharacter && (
+                    <form className="flex flex-col gap-4 w-full max-w-md mt-4" onSubmit={handleSchedule}>
+                        
+                        {/* Card de exibição do personagem selecionado - selected-character-card */}
+                        <div className="flex flex-col items-center text-center bg-gray-100 p-4 rounded-lg shadow-sm">
+                            <img 
+                                src={selectedCharacter.image} 
+                                alt={selectedCharacter.name} 
+                                // Estilização Tailwind (selected-character-card img)
+                                className="w-24 h-24 
+                                           rounded-full 
+                                           mb-3 
+                                           border-4 border-blue-500 
+                                           object-cover" 
+                            />
+                            <h3 className="m-0 text-2xl font-bold text-blue-700">
+                                {selectedCharacter.name}
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-600">Espécie: {selectedCharacter.species}</p>
+                        </div>
+                        
+                        {/* Campo para selecionar a data do protocolo */}
+                        <label className="flex flex-col items-start font-bold">
+                            Data do Protocolo:
+                            <input
+                                type="date"
+                                value={scheduleDate}
+                                onChange={(e) => setScheduleDate(e.target.value)}
+                                required
+                                // Estilização Tailwind (schedule-form input[type="date"])
+                                className="w-full 
+                                           p-2 
+                                           border border-gray-300 
+                                           rounded-lg 
+                                           text-base 
+                                           mt-1 
+                                           focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                            />
+                        </label>
+                        
+                        {/* Botão para enviar o formulário - form-button */}
+                        <button 
+                            type="submit" 
+                            // Estilização Tailwind (form-button)
+                            className="py-3 px-5 
+                                       bg-green-600 
+                                       text-white 
+                                       font-bold 
+                                       rounded-lg 
+                                       cursor-pointer 
+                                       text-lg 
+                                       hover:bg-green-700 
+                                       transition-colors duration-300"
+                        >
+                            Agendar Protocolo
+                        </button>
+                    </form>
+                )}
             </div>
-            
-            {/* Campo para selecionar a data do protocolo */}
-            <label>
-              Data do Protocolo:
-              <input
-                type="date"
-                value={scheduleDate}
-                onChange={(e) => setScheduleDate(e.target.value)}
-                required
-              />
-            </label>
-            
-            {/* Botão para enviar o formulário */}
-            <button type="submit" className="form-button">
-              Agendar Protocolo
-            </button>
-          </form>
-        )}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default Schedule;

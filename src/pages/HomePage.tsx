@@ -1,77 +1,103 @@
-import { useAgenda } from '../hooks/useAgenda'; // Importa o hook de lógica para gerenciar o estado global
-import Calendar from '../components/calendar/Calendar'; // Importa o componente de calendário
-import List from '../components/list/List'; // Importa o componente de lista
-import Schedule from '../components/schedule/Schedule'; // Importa o componente de agendamento
-import '../App.css'; // Importa os estilos globais da aplicação
+import { useAgenda } from '../hooks/useAgenda';
+import Calendar from '../components/calendar/Calendar';
+import List from '../components/list/List';
+import Schedule from '../components/schedule/Schedule';
 
-// O componente principal da página
 function HomePage() {
-    // Chama o hook e desestrutura os valores e funções que ele retorna.
-    // O hook é responsável por toda a lógica de dados.
     const {
-        agendaItens, // Lista de todos os itens (não ordenada)
-        currentView, // Estado que controla qual visualização está ativa
-        setCurrentView, // Função para mudar a visualização
-        searchQuery, // Estado da busca
-        setSearchQuery, // Função para atualizar o estado da busca
-        sortedItens, // Lista de itens já ordenada por nome
-        handleUpdateDates, // Passa a função para atualizar datas
-        handleAddItem, // Passa a função para adicionar novos itens
+        agendaItens,
+        currentView,
+        setCurrentView,
+        searchQuery,
+        setSearchQuery,
+        sortedItens,
+        handleUpdateDates,
+        handleAddItem,
+        isLoading,
+        error,
     } = useAgenda();
 
+    // Tratamento de loading
+    if (isLoading) {
+        return (
+            <div className="w-full max-w-7xl mx-auto flex justify-center items-center min-h-screen">
+                <div className="text-xl text-gray-600">Carregando...</div>
+            </div>
+        );
+    }
+
+    // Tratamento de erro
+    if (error) {
+        return (
+            <div className="w-full max-w-7xl mx-auto flex justify-center items-center min-h-screen">
+                <div className="text-xl text-red-600">{error}</div>
+            </div>
+        );
+    }
+
+    // Classes comuns do botão para reutilização
+    const baseButtonClasses = "px-5 py-2 border border-gray-300 rounded-lg cursor-pointer transition-all duration-300 text-base font-medium";
+    // Classes do botão ativo (visualização selecionada)
+    const activeButtonClasses = "bg-blue-600 text-white border-blue-600 shadow-md hover:bg-blue-700";
+    // Classes do botão inativo
+    const inactiveButtonClasses = "bg-gray-100 text-gray-700 hover:bg-gray-200";
+
     return (
-        // O contêiner principal da página
-        <div className="container">
-            <h1>Registro de Experimentos</h1>
+        <div className="w-full max-w-7xl mx-auto">
+            <h1>
+                Registro de Experimentos
+            </h1>
 
             {/* Navegação entre as visualizações */}
-            <div className="view-switcher">
+            <div className="flex justify-center mb-6 space-x-2">
+
                 {/* Botão para a visualização de Lista */}
                 <button
-                    onClick={() => setCurrentView('list')} // Muda o estado para 'list'
-                    // Adiciona a classe 'active' se for a visualização atual
-                    className={`view-button ${currentView === 'list' ? 'active' : ''}`}>
+                    onClick={() => setCurrentView('list')}
+                    className={`${baseButtonClasses} ${currentView === 'list' ? activeButtonClasses : inactiveButtonClasses}`}
+                >
                     Lista
                 </button>
+
                 {/* Botão para a visualização de Calendário */}
                 <button
                     onClick={() => setCurrentView('calendar')}
-                    className={`view-button ${currentView === 'calendar' ? 'active' : ''}`}>
+                    className={`${baseButtonClasses} ${currentView === 'calendar' ? activeButtonClasses : inactiveButtonClasses}`}
+                >
                     Calendário
                 </button>
+
                 {/* Botão para a visualização de Agendamento */}
                 <button
                     onClick={() => setCurrentView('schedule')}
-                    className={`view-button ${currentView === 'schedule' ? 'active' : ''}`}>
+                    className={`${baseButtonClasses} ${currentView === 'schedule' ? activeButtonClasses : inactiveButtonClasses}`}
+                >
                     Agendar
                 </button>
             </div>
 
             {/* Renderização condicional das visualizações */}
-            {/* Se o estado for 'list', renderiza o componente List */}
             {currentView === 'list' && (
                 <List
-                    sortedItens={sortedItens} // Passa a lista já ordenada
+                    sortedItens={sortedItens}
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}
                 />
             )}
 
-            {/* Se o estado for 'calendar', renderiza o componente Calendar */}
             {currentView === 'calendar' && (
-                <Calendar itens={agendaItens} /> // Passa a lista original para o calendário
+                <Calendar itens={agendaItens} />
             )}
 
-            {/* Se o estado for 'schedule', renderiza o componente Schedule */}
             {currentView === 'schedule' && (
                 <Schedule
-                    itens={sortedItens} // Passa a lista ordenada para a busca
-                    handleAddItem={handleAddItem} // Passamos as duas funções, agora o Schedule decide qual usar
-                    handleUpdateDates={handleUpdateDates} // Passa a função para atualizar datas
+                    itens={sortedItens}
+                    handleAddItem={handleAddItem}
+                    handleUpdateDates={handleUpdateDates}
                 />
             )}
         </div>
     );
 }
 
-export default HomePage; // Exporta o componente para ser usado em App.tsx
+export default HomePage;
